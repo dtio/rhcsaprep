@@ -85,3 +85,76 @@
     /etc/auto.indirect
 
         *   -rw,sync,nfs4   server:/share/&
+
+# tuned
+
+    # tuned-adm list
+    # tuned-adm active
+    # tuned-adm profile profilename
+
+# nice
+
+    The lower number the higher is the priority
+    # renice -n -10 pidnumber
+
+# Boot Issues
+
+    remove console from linux line
+    add rd.break
+
+    mount -o remount,rw /sysroot
+    chroot /sysroot
+    passwd root
+    touch .autorelabel
+    exit
+    exit
+
+    Or add systemd.unit=emergency.target
+
+# Selinux Stuffs
+
+    # chcon -t httpd_sys_content_t /directory
+    or
+    # semanage fcontext -a -t http_sys_content_t '/directory(/.*)?'
+    # restorecon -Rv /directory
+
+    # semanage port -a -t http_port_t -p tcp 82
+
+    # getsebool -a
+    # setsebool -P httpd_enable_homedirs on
+    # semanage boolean -l
+
+    # grep sealert /var/log/messages
+    # sealert -l lookupid
+    # sealert -a /var/log/audit/audit.log
+
+# parted
+
+    # parted /dev/vdb mklabel gpt
+    # parted /dev/vdb mkpart userdata xfs 2048s 1000MB
+    After partition creation
+    # udevadm settle
+    After updating /etc/fstab
+    # systemctl daemon-reload
+
+# stratis
+
+    # dnf install stratisd stratis-cli
+    # stratis pool create pool1 /dev/vdb
+    # stratis pool add-data pool1 /dev/vdc
+    # stratis pool list
+    # stratis blockdev list pool1
+    # stratis filesystem create pool1 fs1
+    # stratis filesystem list
+    # stratis filesystem snapshot pool1 fs1 snapshot1
+
+    /etc/fstab entry
+    UUID=XXXX /dir xfs defaults,x-systemd.requires=stratisd.service 0 0
+
+# lvm
+
+    # parted /dev/vdb mkpart primary 514MiB 1026MiB
+    # parted /dev/vdb set 2 lvm on
+    # udevadm settle
+
+    
