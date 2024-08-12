@@ -157,4 +157,49 @@
     # parted /dev/vdb set 2 lvm on
     # udevadm settle
 
+# firewalld
+
+    # firewall-cmd --permanent --zone=block --add-source=x.x.x.x/32
+    # firewall-cmd --permanent --zone=public --add-service=mysql
+    # filreall-cmd --permanent --zone=public --add-port=8080/tcp
+    # firewall-cmd --reload 
+
+# podman
+
+    .config/containers/registries.conf
+
+    unqualified-search-registries == ['registry.lab.example.com']
+
+    [[registry]]
+    location = "registry.lab.example.com"
+    insecure = true
+    blocked = false
+
+    $ podman login registry.lab.example.com
     
+    $ podman run -d --name webapp \
+    -p 8090:8080 \
+    -v ~/webcontent:/var/www:Z \
+    registry.lab.example.com/rhel9/httpd-24
+    
+    $ podman run -d --name db-app01 \
+    -e MYSQL_USER=developer \
+    -e MYSQL_PASSWORD=redhat \
+    -e MYSQL_DATABASE=inventory \
+    -e MYSQL_ROOT_PASSWORD=redhat \
+    -p 13306:3306 \
+    -v /home/podmgr/storage/database:/var/lib/mysql/data:Z \
+    registry.lab.example.com/rhel9/mariadb-105
+    
+    $ mkdir -p ~/.config/systemd/user/
+    $ cd ~/.config/systemd/user
+    $ podman generate systemd --name webapp --new --files 
+    $ podman stop webapp
+    $ podman rm webapp
+    $ systemctl --user daemon-reload
+    $ systemctl --user enable --now container-webapp
+    $ loginctl enable-linger
+
+    In case permission issue
+    $ podman exec -it db-app01 grep mysql /etc/passwd
+    $ podman unshare chown 27:27 /home/user/db_data
