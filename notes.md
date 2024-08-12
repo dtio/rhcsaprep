@@ -8,6 +8,16 @@
     > file 2>&1
     &> file
 
+    Write to file with tee
+
+    command |& tee filename.log
+    command 2>&1 tee filename.log
+
+    to append use tee -a
+    command |& tee -a filename.log
+    command 2>&1 tee -a filename.log
+
+
 # VIM Shortcuts
 
     v - characters selection
@@ -203,3 +213,9 @@
     In case permission issue
     $ podman exec -it db-app01 grep mysql /etc/passwd
     $ podman unshare chown 27:27 /home/user/db_data
+
+# find command
+
+    # find / -iname filename
+    # find / -user username1 -group group1 -perm 640 
+    # find / -type f -size 100c 
