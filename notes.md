@@ -1,3 +1,7 @@
+# login.defs
+
+    # chage -l username
+
 # File redirection
 
     Redirect stdout, stderr while appending
