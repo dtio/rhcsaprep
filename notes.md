@@ -223,3 +223,4 @@
     # find / -iname filename
     # find / -user username1 -group group1 -perm 640 
     # find / -type f -size 100c 
+    # find / -type f -user username1 -exec cp '{}' /directory \;
